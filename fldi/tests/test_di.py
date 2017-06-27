@@ -38,7 +38,7 @@ class DITest(unittest.TestCase):
             di.get('UnknownService')
 
         self.assertTrue(
-            'Can not find' in context.exception.message,
+            'Can not find' in str(context.exception),
             'Di does not throw error in case of get unknown service'
         )
 

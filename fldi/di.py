@@ -46,7 +46,7 @@ class Container (object):
                     args.append(self.get(arg))
             return dotmap.DotMap(dependency(*args))
 
-        if inspect.ismethod(dependency.__init__):
+        if inspect.isfunction(dependency.__init__) or inspect.ismethod(dependency.__init__):
             if hasattr(dependency, '__ditype__') and dependency.__ditype__ == 'factory':
                 args.append(self)
             else:
