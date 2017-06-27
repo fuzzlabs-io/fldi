@@ -1,3 +1,4 @@
+import inspect
 import unittest
 from ..di import Container
 
@@ -49,4 +50,37 @@ class DITest(unittest.TestCase):
 
     def test_service_class__with_dependencies(self):
         self.assertEqual(di.get('ClassWithDependencies').test(), 'testfuncok')
+
+class ImpelemtationsTest(unittest.TestCase):
+    def test_different_impementations(self):
+        def Database(container):
+            implementation = container.get('Config').getKey('Database')
+            return container.getImplementation('Database', implementation)
+
+        def Postgres():
+            def test():
+                return 'postgres'
+            return {"test": test}
+
+        def MySql():
+            def test():
+                return 'mysql'
+            return {"test": test}
+
+        def Config():
+            config = {}
+            def getKey(key):
+                return config.get(key, None)
+            def updateKey(key, name):
+                config[key] = name
+            return {'getKey': getKey, 'updateKey': updateKey}
+
+        container = Container()
+        container.register(Config, 'Config')
+        container.get('Config').updateKey('Database', 'Postgres')
+        container.registerFactory(Database, 'Database')
+        container.register(Postgres, 'Database-Postgres')
+        container.register(MySql, 'Database-MySql')
+
+        self.assertEqual(container.get('Database').test(), 'postgres')
 
