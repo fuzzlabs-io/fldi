@@ -8,7 +8,7 @@ except IOError:
 
 setup(
     name="fldi",
-    version="0.1.0",
+    version="0.1.1",
     description="A dependency injection container",
     license="MIT",
     author="Ádám Gólya",
