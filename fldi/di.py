@@ -18,7 +18,7 @@ class Container (object):
         self.register(dependency, name)
 
     def get(self, name):
-        if (name in self.__container):
+        if name in self.__container:
             return self.__container[name]
 
         dependency = self.__getDependencyByName(name)
@@ -38,7 +38,7 @@ class Container (object):
 
     def __getClassDependency(self, dependency):
         args = []
-        if (inspect.isfunction(dependency)):
+        if inspect.isfunction(dependency):
             if hasattr(dependency, '__ditype__') and dependency.__ditype__ == 'factory':
                 args.append(self)
             else:
@@ -46,12 +46,12 @@ class Container (object):
                     args.append(self.get(arg))
             return dotmap.DotMap(dependency(*args))
 
-        if (inspect.ismethod(dependency.__init__)):
+        if inspect.ismethod(dependency.__init__):
             if hasattr(dependency, '__ditype__') and dependency.__ditype__ == 'factory':
                 args.append(self)
             else:
                 for arg in inspect.getargspec(dependency.__init__)[0]:
-                    if (arg != "self"):
+                    if arg != "self":
                         args.append(self.get(arg))
         return dependency(*args)
 
